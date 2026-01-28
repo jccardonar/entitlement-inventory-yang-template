@@ -9,20 +9,20 @@ date:
 consensus: true
 v: 3
 area: "Operations and Management"
-workgroup: "Network Inventory YANG WG"
+workgroup: "Network Inventory YANG"
 keyword:
   - inventory
   - capability
   - entitlement
   - licensing
 venue:
-  group: "Network Inventory YANG WG"
+  group: "Network Inventory YANG"
   type: "Working Group"
-  mail: "inventory-yang@ietf.org"
-  arch: "https://mailarchive.ietf.org/arch/browse/inventory-yang/"
+  mail: "ivy@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/ivy"
 
-  github: "dr2lopez/ivy-capability-entitlement"
-  latest: "https://dr2lopez.github.io/ivy-capability-entitlement/draft-mcd-ivy-entitlement-inventory.html"
+  github: "jccardonar/entitlement-inventory-yang-template"
+  latest: "https://jccardonar.github.io/entitlement-inventory-yang-template/draft-mcd-ivy-entitlement-inventory.html"
 author:
   - name: Marisol Palmero
     organization: Independent
