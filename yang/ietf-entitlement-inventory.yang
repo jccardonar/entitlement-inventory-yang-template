@@ -57,6 +57,76 @@ module ietf-entitlement-inventory {
       "draft-ietf-ivy-entitlement-inventory-01";
   }
 
+  identity entitlement-type {
+    description
+      "Base identity for entitlement types.";
+  }
+
+  identity perpetual-license {
+    base entitlement-type;
+    description
+      "Perpetual license with no expiration date.";
+  }
+
+  identity subscription {
+    base entitlement-type;
+    description
+      "Time-based subscription license.";
+  }
+
+  identity trial {
+    base entitlement-type;
+    description
+      "Trial or evaluation license with limited duration.";
+  }
+
+  identity metered {
+    base entitlement-type;
+    description
+      "Usage-based metered license.";
+  }
+
+  identity concurrent {
+    base entitlement-type;
+    description
+      "Concurrent user license with seat limits.";
+  }
+
+  identity restriction-type {
+    description
+      "Base identity for restriction types.";
+  }
+
+  identity bandwidth-limit {
+    base restriction-type;
+    description
+      "Network bandwidth limitation.";
+  }
+
+  identity connection-limit {
+    base restriction-type;
+    description
+      "Maximum number of concurrent connections.";
+  }
+
+  identity storage-limit {
+    base restriction-type;
+    description
+      "Storage capacity limitation.";
+  }
+
+  identity feature-flag {
+    base restriction-type;
+    description
+      "Boolean feature enablement.";
+  }
+
+  identity time-limit {
+    base restriction-type;
+    description
+      "Time-based usage limitation.";
+  }
+
   identity capability-class {
     description
       "Base identity for capability classes.";
@@ -72,23 +142,35 @@ module ietf-entitlement-inventory {
     type enumeration {
       enum active {
         description
-          "Entitlement is active.";
+          "Entitlement is active and in use. Valid transitions: 
+          expired, revoked, suspended";
       }
       enum expired {
         description
-          "Entitlement is expired.";
+          "Entitlement has expired based on expiration-date.
+          Valid transitions: active (if renewed), revoked.";
+      }
+      enum suspended {
+        description
+          "Entitlement is temporarily suspended.
+           Valid transitions: active, revoked, expired.";
       }
       enum pending {
         description
-          "Entitlement is pending activation.";
+          "Entitlement is pending activation.
+           This is typically the initial state before start-date 
+           or before administrative approval.
+           Valid transitions: active, revoked.";
       }
       enum revoked {
         description
-          "Entitlement is revoked.";
+          "Entitlement has been permanently revoked.
+           This is a terminal state.
+           Valid transitions: none.;
       }
     }
     description
-      "State of the entitlement.";
+      "State of the entitlement lifecycle.";
   }
 
   grouping restriction-fields {
@@ -96,6 +178,14 @@ module ietf-entitlement-inventory {
       "Common fields for describing restrictions or limits.
        Used both for capability-level restrictions and
        entitlement-level global restrictions.";
+
+    leaf restriction-type {
+      type identityref {
+        base restriction-type;
+      }
+      description
+        "Type of restriction (throughput, connections, storage, etc.).";
+    }   
     leaf description {
       type string;
       description
@@ -104,9 +194,8 @@ module ietf-entitlement-inventory {
     leaf resource-name {
       type string;
       description
-        "Optional name of the physical or network resource
-         being restricted (e.g., 'bandwidth', 'throughput',
-         'storage', 'memory').";
+        "Name of the resource being restricted
+         (e.g., 'bandwidth', 'throughput', 'storage', 'memory').";
     }
     leaf units {
       type string;
@@ -168,6 +257,13 @@ module ietf-entitlement-inventory {
              leaf means that the information system cannot express
              this information";
         }
+        leaf entitlement-type {
+          type identityref {
+            base entitlement-type;
+          }
+          description
+            "Type of entitlement (perpetual, subscription, trial, etc.).";
+        }
       }
     }
   }
@@ -175,8 +271,9 @@ module ietf-entitlement-inventory {
   grouping capabilities-group {
     description
       "Grouping for capabilities that can be applied to assets.
-       Capabilities represent what the
-       asset can do, potentially restricted by entitlements.";
+       Capabilities represent functional features that an asset
+      (network element or component) can perform. Each capability
+       may require one or more entitlements to be enabled. ";
     container capabilities {
       presence
         "The presence of this container means the information system
@@ -391,22 +488,34 @@ module ietf-entitlement-inventory {
         container renewal-profile {
           description
             "Renewal and validity information for the entitlement.";
+
           leaf activation-date {
             type yang:date-and-time;
             description
               "Date when entitlement was activated.";
           }
+          
           leaf start-date {
             type yang:date-and-time;
+            must '. <= ../expiration-date or not(../expiration-date)' {
+              error-message
+              "Start date must be before or equal to expiration date.";
+            }
             description
               "Start date of entitlement validity.";
           }
+
           leaf expiration-date {
             type yang:date-and-time;
+            must '. >= ../start-date' {
+              error-message
+              "Expiration date must be after or equal to start date.";
+            }
             description
               "Expiration date of the entitlement.";
           }
         }
+
         container restrictions {
           presence
             "The presence of this container means the
@@ -458,19 +567,19 @@ module ietf-entitlement-inventory {
                does not apply any restrictions on who can
                use or not the asset where assigned
                to the entitlement.";
-            container organizations_names {
+            container organization-names {
               description
                 "Organization holders.";
-              leaf-list organizations {
+              leaf-list organization {
                 type string;
                 description
                   "List of organization names.";
               }
             }
-            container users_names {
+            container user-names {
               description
                 "User holders.";
-              leaf-list users {
+              leaf-list user {
                 type string;
                 description
                   "List of user names.";
