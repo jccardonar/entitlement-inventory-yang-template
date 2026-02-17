@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-15T02:05:15.602602+00:00",
+  "timestamp": "2026-02-17T01:58:40.251885+00:00",
   "repo": "jccardonar/entitlement-inventory-yang-template",
   "labels": [
     {
@@ -50,5 +50,32 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDORDaBi87EJZQP",
+      "title": "proposed changes to the YANG model",
+      "url": "https://github.com/jccardonar/entitlement-inventory-yang-template/pull/1",
+      "state": "OPEN",
+      "author": "marisolpalmero",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "there are a few things that we could propose also, but probably for later:\r\nwhat is included here:\r\n\u2705 Fix naming inconsistency (organizations_names \u2192 organization-names)\r\n\u2705 Add typedef for entitlement-id with pattern constraint\r\n\u2705 Add must statements for date validation\r\n\u2705 Add suspended state to entitlement-state-t\r\n\u2705 Add entitlement-type identity\r\n\r\n\r\nFor later?\r\n* Add usage-statistics container\r\n* Add compliance container with audit trail\r\n* Add cost-information container\r\n* Add notifications (expiring, expired, violation)",
+      "createdAt": "2026-02-16T17:00:50Z",
+      "updatedAt": "2026-02-16T17:00:50Z",
+      "baseRepository": "jccardonar/entitlement-inventory-yang-template",
+      "baseRefName": "main",
+      "baseRefOid": "485200f26bd56ca35517660cdfd3c750ccfa3f43",
+      "headRepository": "marisolpalmero/entitlement-inventory-yang-template",
+      "headRefName": "main",
+      "headRefOid": "357f2f72c6854a6bc065959b2d2936779374c63f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
